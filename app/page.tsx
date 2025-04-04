@@ -7,7 +7,7 @@ import { Plus } from 'lucide-react';
 
 export default function Home() {
   return (
-    <main className="container mx-auto max-w-4xl px-4 py-8">
+    <main className="mx-auto max-w-4xl bg-transparent px-4 py-8">
       <div className="mb-8 flex items-center justify-between">
         <h1 className="text-3xl font-bold">Portfolio</h1>
         <Link href="/buy">
