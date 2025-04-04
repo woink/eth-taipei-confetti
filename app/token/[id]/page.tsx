@@ -1,5 +1,5 @@
 import { tokens } from '@/app/data/mockData';
-import TokenDetails from '@/app/components/TokenDetails';
+import TokenDetails from '@/components/TokenDetails';
 
 // Generate static pages for all tokens in our mock data
 export async function generateStaticParams() {
