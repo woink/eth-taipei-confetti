@@ -21,8 +21,8 @@ export default function TokenList({ portfolio }: { portfolio: Portfolio }) {
               <Image
                 src={token.logo}
                 alt={token.name}
-                width={64}
-                height={64}
+                width={40}
+                height={40}
                 className="h-10 w-10"
               />
               <div>
