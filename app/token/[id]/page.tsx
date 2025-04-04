@@ -8,7 +8,8 @@ export async function generateStaticParams() {
   }));
 }
 
-export default function TokenPage({ params }: { params: { id: string } }) {
+export default async function TokenPage(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   return (
     <main className="container mx-auto px-4 py-8 max-w-4xl">
       <TokenDetails id={params.id} />
