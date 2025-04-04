@@ -1,6 +1,6 @@
 'use client';
 
-import { Portfolio } from '@/app/types';
+import { Portfolio } from '@/types';
 import { Card } from '@/components/ui/card';
 import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
 

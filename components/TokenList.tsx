@@ -1,6 +1,6 @@
 'use client';
 
-import { Portfolio } from '@/app/types';
+import { Portfolio } from '@/types';
 import { Card } from '@/components/ui/card';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';

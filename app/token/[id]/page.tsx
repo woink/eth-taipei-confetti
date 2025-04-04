@@ -1,4 +1,4 @@
-import { tokens } from '@/app/data/mockData';
+import { tokens } from '@/data/mockData';
 import TokenDetails from '@/components/TokenDetails';
 
 // Generate static pages for all tokens in our mock data

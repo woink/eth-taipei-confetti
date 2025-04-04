@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ArrowUpRight, ArrowDownRight, ArrowLeft } from 'lucide-react';
-import { tokens, mockTransactions } from '@/app/data/mockData';
+import { tokens, mockTransactions } from '@/data/mockData';
 import { useRouter } from 'next/navigation';
 import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
 import Image from 'next/image';

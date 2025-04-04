@@ -1,4 +1,4 @@
-import { Portfolio, Token, Transaction } from '../types';
+import { Portfolio, Token, Transaction } from '@/types';
 
 // Generate mock historical data for charts
 const generateHistoricalData = (days: number, startValue: number, volatility: number = 0.02) => {

@@ -1,6 +1,6 @@
-import { mockPortfolio } from './data/mockData';
-import TokenList from '../components/TokenList';
-import PortfolioSummary from '../components/PortfolioSummary';
+import { mockPortfolio } from '@/data/mockData';
+import TokenList from '@/components/TokenList';
+import PortfolioSummary from '@/components/PortfolioSummary';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Plus } from 'lucide-react';
