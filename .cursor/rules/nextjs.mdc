@@ -1,0 +1,25 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: Next.js framework guidelines and best practices
+globs: **/*.{js,jsx,ts,tsx}
+---
+
+# Next.js Framework Guidelines
+
+- This project uses Next.js version 15.2.4
+- Use the App Router pattern for new components and pages
+- Follow Next.js best practices for data fetching:
+  - Use Server Components where possible
+  - Implement proper data fetching strategies (SSR, ISR, CSR) based on content needs
+  - Leverage React Server Components for improved performance
+- When creating new pages or components:
+  - Place page components in the app/ directory
+  - Follow the routing conventions of Next.js App Router
+  - Use layout.tsx files for shared layouts
+- For client-side navigation, use the Next.js Link component instead of regular anchor tags
+- Utilize next/image for optimized image loading
+- Use next-themes for theme management

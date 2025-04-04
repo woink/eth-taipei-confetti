@@ -1,0 +1,26 @@
+---
+description: 
+globs: *.tsx,*.css,*.ts
+alwaysApply: false
+---
+---
+description: Tailwind CSS styling guidelines
+globs: **/*.{js,jsx,ts,tsx,css}
+---
+
+# Tailwind CSS Guidelines
+
+- This project uses Tailwind CSS 3.4.1
+- Follow a mobile-first approach with responsive design
+- Use Tailwind's utility classes directly in components rather than creating custom CSS
+- For component styling:
+  - Group related utilities with appropriate spacing
+  - Use consistent ordering of utilities (layout, typography, visual, etc.)
+  - Leverage the clsx/tailwind-merge libraries for conditional styling
+- Utilize the class-variance-authority package for creating component variants
+- For animations, use the tailwindcss-animate plugin
+- When styling is complex:
+  - Consider extracting common patterns to components
+  - Use @apply in CSS files sparingly and only for repeated patterns
+- Follow the project's color scheme and design system
+- Use Tailwind's theme extension in tailwind.config.js for custom values

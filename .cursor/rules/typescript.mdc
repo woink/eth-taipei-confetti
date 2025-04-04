@@ -1,0 +1,24 @@
+---
+description: 
+globs: *.ts,*.tsx
+alwaysApply: false
+---
+---
+description: TypeScript standards and type definitions
+globs: **/*.{ts,tsx}
+---
+
+# TypeScript Standards
+
+- This project uses TypeScript 5.2.2
+- Enforce strict type checking
+- Define explicit return types for functions, especially for exported functions
+- Use interface for object types that will be extended, and type for unions, primitives, and object types that won't be extended
+- Prefer readonly properties when the value shouldn't be mutated
+- Use type inference when the type is obvious
+- For React components:
+  - Define prop types using interfaces
+  - Use React.FC<Props> type sparingly (prefer explicit return types)
+- Avoid using 'any' type; use 'unknown' when the type is truly unknown
+- Utilize TypeScript utility types (Partial, Required, Pick, Omit, etc.) when appropriate
+- Create and use type definitions for API responses and requests
