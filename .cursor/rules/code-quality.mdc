@@ -1,0 +1,34 @@
+---
+description: 
+globs: *.tsx,*.ts
+alwaysApply: false
+---
+---
+description: Code quality, formatting, and linting standards
+globs: **/*.{js,jsx,ts,tsx}
+---
+
+# Code Quality Standards
+
+- This project uses ESLint for linting and Prettier for formatting
+- Run linting with `npm run lint`
+- Format code with `npm run format`
+- Follow these coding standards:
+  - Use meaningful variable and function names
+  - Keep functions small and focused on a single responsibility
+  - Write comments for complex logic
+  - Use consistent indentation and spacing
+  - Limit line length to improve readability
+- For imports:
+  - Group imports logically (React, third-party, internal)
+  - Use absolute imports for project files
+  - Avoid circular dependencies
+- For error handling:
+  - Use try/catch blocks appropriately
+  - Provide meaningful error messages
+  - Log errors for debugging
+- Write tests for critical functionality
+- Optimize for performance:
+  - Memoize expensive calculations
+  - Avoid unnecessary re-renders
+  - Use appropriate React optimization techniques

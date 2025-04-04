@@ -1,0 +1,29 @@
+---
+description: 
+globs: *.tsx
+alwaysApply: false
+---
+---
+description: React component guidelines and best practices
+globs: **/*.{jsx,tsx}
+---
+
+# React Component Guidelines
+
+- This project uses React 18.2.0
+- Prefer functional components with hooks over class components
+- Follow component naming conventions:
+  - Use PascalCase for component names
+  - Use camelCase for functions and variables
+- Structure components with a clear separation of concerns:
+  - Props interface/type at the top
+  - Hooks and state declarations next
+  - Helper functions
+  - Return statement with JSX
+- Implement proper error boundaries around complex component trees
+- Use React.memo() for performance optimization when appropriate
+- Leverage React.Suspense and React.lazy() for code splitting
+- When using hooks:
+  - Follow the rules of hooks
+  - Use custom hooks to abstract reusable logic
+  - Properly manage dependencies in useEffect

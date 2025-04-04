@@ -1,0 +1,34 @@
+---
+description: 
+globs: *.tsx
+alwaysApply: false
+---
+---
+description: Radix UI and shadcn/ui component guidelines
+globs: **/*.{jsx,tsx}
+---
+
+# UI Component Guidelines
+
+- This project uses various Radix UI primitives for accessible components
+- Follow accessibility best practices:
+  - Ensure proper ARIA attributes
+  - Maintain keyboard navigation
+  - Support screen readers
+- When implementing Radix UI components:
+  - Use the appropriate component for the interaction pattern
+  - Customize styling using Tailwind classes
+  - Follow the compound component pattern
+- For form elements:
+  - Use react-hook-form for form state management
+  - Implement zod for form validation
+  - Utilize Radix UI form primitives for accessible inputs
+- For complex UI patterns:
+  - Use react-resizable-panels for resizable layouts
+  - Implement embla-carousel-react for carousels
+  - Use sonner for toast notifications
+  - Leverage vaul for drawer components
+- When creating new UI components:
+  - Ensure they are responsive
+  - Test across different viewports
+  - Maintain consistency with existing components

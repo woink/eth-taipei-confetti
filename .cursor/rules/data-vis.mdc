@@ -1,0 +1,26 @@
+---
+description: 
+globs: *.tsx
+alwaysApply: false
+---
+---
+description: Data visualization and charting guidelines
+globs: **/*.{jsx,tsx}
+---
+
+# Data Visualization Guidelines
+
+- This project uses Recharts 2.15.2 for data visualization
+- When creating charts:
+  - Use appropriate chart types for the data being displayed
+  - Implement responsive designs that work across screen sizes
+  - Include proper legends, labels, and tooltips
+  - Ensure accessibility with appropriate ARIA attributes
+  - Use consistent colors from the project's theme
+- Format data appropriately before passing to chart components
+- Use date-fns for date formatting and manipulation
+- Implement proper loading states and error handling
+- For complex visualizations:
+  - Break down into smaller, reusable components
+  - Consider performance implications with large datasets
+  - Implement virtualization or pagination when necessary
