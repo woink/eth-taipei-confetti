@@ -56,13 +56,13 @@ export async function POST(
   // Parse request body
   let body;
   try {
-    
+
     body = await request.json();
   } catch (error) {
     console.error("Error parsing JSON:", error);
     return NextResponse.json({ error: "Invalid JSON in request body" }, { status: 400 });
   }
-  
+
   const { 
     srcChainId, 
     dstChainId, 
@@ -78,7 +78,7 @@ export async function POST(
 
   // RPC address
   let nodeUrl:string
-  
+
   if (srcChainId == NetworkEnum.OPTIMISM){
     // @ts-ignore:next-line
     nodeUrl = process.env.RPC_URL_OP;
@@ -89,7 +89,7 @@ export async function POST(
     throw new Error("Unsupported chain ID");
   }
 
-  
+
   // This is a test account, no funds there
   // @ts-ignore:next-line
   const makerAddress: string = process.env.WALLET;
