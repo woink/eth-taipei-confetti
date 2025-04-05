@@ -24,19 +24,19 @@ const generateHistoricalData = (days: number, startValue: number, volatility: nu
 
 export const tokens: Token[] = [
   {
-    id: 'ETH',
+    id: 'ETH-Arbitrum',
     name: 'Ether',
     symbol: 'ETH',
     price: 3450.75,
     priceChange24h: 5.2,
     marketCap: 415000000000,
     volume24h: 15000000000,
-    chain: 'Ethereum',
+    chain: 'Arbitrum',
     logo: 'https://tokens.1inch.io/0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.png',
     historicalData: generateHistoricalData(30, 3450.75),
   },
   {
-    id: 'OP',
+    id: 'OP-Optimism',
     name: 'Optimism',
     symbol: 'OP',
     price: 125.3,
