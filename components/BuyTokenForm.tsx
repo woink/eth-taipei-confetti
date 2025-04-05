@@ -1,17 +1,71 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { Token } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
+
+import { Confetti, type ConfettiRef } from '@/components/magicui/confetti';
 
 interface BuyTokenFormProps {
   token: Token;
 }
 
+export const LoadingSpinner = ({ className }: { className: string }) => {
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={cn('animate-spin', className)}
+  >
+    <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+  </svg>;
+};
+
 export function BuyTokenForm({ token }: BuyTokenFormProps) {
   const [amount, setAmount] = useState(0);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const confettiRef = useRef<ConfettiRef>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsConfirmOpen(true);
+
+    try {
+      const response = await fetch('/api/buy', {
+        method: 'POST',
+        body: JSON.stringify({
+          srcTokenAddress: '0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85',
+          dstTokenAddress: '0x912CE59144191C1204E64559FE8253a0e49E6548',
+          amount: '100000',
+          srcChainId: 10,
+          dstChainId: 42161,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error('Purchase failed');
+      }
+      setIsConfirmOpen(true);
+      confettiRef.current?.fire();
+    } catch (error) {
+      console.error('Purchase failed:', error);
+    }
+  };
 
   return (
     <div className="rounded-lg border p-6">
@@ -32,12 +86,7 @@ export function BuyTokenForm({ token }: BuyTokenFormProps) {
       </div>
 
       <div className="space-y-4">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            console.log(amount);
-          }}
-        >
+        <form onSubmit={handleSubmit}>
           <div>
             <label className="mb-2 block text-sm font-medium">Amount</label>
             <Input
@@ -65,12 +114,26 @@ export function BuyTokenForm({ token }: BuyTokenFormProps) {
               </span>
             </div>
           </div>
-
-          <Button type="submit" className="w-full">
+          {/* <div>
+            <Confetti ref={confettiRef} className="absolute left-0 top-0 z-0 size-full" />
+          </div> */}
+          <Button type="submit" className="mt-4 w-full">
             Buy {token.symbol}
           </Button>
         </form>
       </div>
+
+      <Dialog open={isConfirmOpen} onOpenChange={setIsConfirmOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="text-center">Your swap is in progress</DialogTitle>
+            <DialogDescription className="text-center">Hang tight</DialogDescription>
+            <div className="mx-auto flex justify-center py-4">
+              <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+            </div>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
