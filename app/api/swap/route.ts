@@ -104,9 +104,6 @@ const secretsCount = quote.getPreset().secretsCount;
 
     console.log(`Order successfully placed`);
 
-    let returnLoop = false;
-
-
       
       while(true){
         console.log(`Polling for fills until order status is set to "executed"...`);
