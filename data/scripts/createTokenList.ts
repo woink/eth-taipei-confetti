@@ -83,7 +83,7 @@ async function getTokens() {
   }
 
   // Write to tokenList.json
-  const outputPath = path.join(__dirname, 'tokenList.json');
+  const outputPath = path.join(__dirname, '../tokenList.json');
   fs.writeFileSync(outputPath, JSON.stringify(tokenList, null, 2));
 
   console.log('Token list has been written to tokenList.json');

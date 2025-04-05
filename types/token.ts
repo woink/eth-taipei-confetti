@@ -5,4 +5,5 @@ export interface Token {
   logo: string;
   price: number;
   priceChange24h: number;
+  chain: string;
 }
