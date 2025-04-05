@@ -2,6 +2,7 @@ import { Token } from '@/types';
 import { Button } from './ui/button';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { price_hardcode } from './PortfolioSummary';
 
 interface TokenCardProps {
   token: Token;
@@ -14,6 +15,8 @@ export function TokenCard({ token }: TokenCardProps) {
     router.push(`/buy/${token.id}`);
   };
 
+  const price = price_hardcode[token.symbol as keyof typeof price_hardcode];
+  const priceChange24h = token.symbol === 'USDC' ? 0.01 : token.priceChange24h;
   return (
     <div
       data-testid="token-card"
@@ -35,10 +38,10 @@ export function TokenCard({ token }: TokenCardProps) {
       </div>
       <div className="flex items-center gap-4">
         <div className="text-right">
-          <p className="font-semibold">{token.price.toFixed(2)}</p>
+          <p className="font-semibold">{price}</p>
           <p className={`text-sm ${token.priceChange24h >= 0 ? 'text-green-500' : 'text-red-500'}`}>
             {token.priceChange24h >= 0 ? '+' : ''}
-            {token.priceChange24h.toFixed(2)}%
+            {priceChange24h.toFixed(2)}%
           </p>
         </div>
         <Button onClick={handleBuy}>Buy</Button>

@@ -9,11 +9,11 @@ import { symbol } from 'zod';
 
 const WALLET = process.env.NEXT_PUBLIC_WALLET;
 
-const price_hardcode = {
+export const price_hardcode = {
   OP: 0.7,
   USDC: 1,
-  ARB: 0.3
-}
+  ARB: 0.3,
+};
 
 export default function PortfolioSummary({
   portfolio,

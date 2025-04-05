@@ -28,7 +28,7 @@ export const tokens: Token[] = tokenList.map((token, index) => {
   // Generate a random price between $0.1 and $5000
   const price = Math.random() * 5000 + 0.1;
   // Generate a random 24h price change between -20% and +20%
-  const priceChange24h = Math.random() * 40 - 20;
+  const priceChange24h = Math.random();
 
   return {
     id: `${token.symbol}-${token.chain}`,
