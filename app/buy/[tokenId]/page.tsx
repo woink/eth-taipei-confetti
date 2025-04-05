@@ -16,10 +16,8 @@ export function generateStaticParams() {
   }));
 }
 
-export default async function BuyTokenPage({ params }: PageProps) {
-  // Handle the entire params object asynchronously
-  const resolvedParams = await Promise.resolve(params);
-  const token = tokens.find((t) => t.id === resolvedParams.tokenId);
+export default function BuyTokenPage({ params }: PageProps) {
+  const token = tokens.find((t) => t.id === params.tokenId);
 
   if (!token) {
     return (

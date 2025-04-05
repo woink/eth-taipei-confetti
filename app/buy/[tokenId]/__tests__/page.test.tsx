@@ -4,6 +4,7 @@ import '@testing-library/jest-dom';
 import BuyTokenPage from '../page';
 import { tokens } from '@/data/tokens';
 
+// Mock Next.js router
 vi.mock('next/navigation', () => ({
   useRouter: () => ({
     push: vi.fn(),
@@ -11,6 +12,20 @@ vi.mock('next/navigation', () => ({
     forward: vi.fn(),
   }),
 }));
+
+// Mock the async component behavior
+vi.mock('../page', async (importOriginal) => {
+  const actual = await importOriginal() as typeof import('../page');
+  return {
+    ...actual,
+    default: (props: {params: {tokenId: string}}) => {
+      const Comp = actual.default;
+      // Wrap the async component and immediately render its result
+      const result = Comp(props);
+      return result;
+    }
+  };
+});
 
 describe('BuyTokenPage', () => {
   it('renders token not found when token does not exist', () => {

@@ -24,6 +24,13 @@ export interface Transaction {
   chain: string;
 }
 
+export interface OPTransaction {
+  to: string;
+  tokens: string;
+  timestamp: string;
+  tx_hash: string;
+}
+
 export interface Portfolio {
   tokens: {
     token: Token;

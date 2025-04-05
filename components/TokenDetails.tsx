@@ -9,11 +9,45 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import PortfolioChart from './PortfolioChart';
 import TransactionCard from './TransactionCard';
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
+import Link from 'next/link';
 
 export default function TokenDetails({ id }: { id: string }) {
   const router = useRouter();
   const token = useMemo(() => tokens.find((t) => t.id === id), [id]);
+  const [transactions, setTransactions] = useState(mockTransactions);
+  const isOP = token?.symbol === 'OP';
+
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      if (!isOP) return;
+
+      try {
+        const response = await fetch('/api/transactions/');
+        console.log('response status:', response.status);
+        const data = await response.json();
+        console.log('response data:', data);
+        // Transform the API data to match our Transaction type
+
+        const formattedTransactions = data.map((tx: any) => ({
+          id: tx.tx_hash,
+          type: 'buy' as const,
+          amount: Number(tx.tokens).toFixed(6),
+          price: Number(tx.tokens) * 1787.71, // Using current token price since API doesn't provide historical prices
+          timestamp: new Date(tx.timestamp),
+          token: token!,
+          chain: token?.chain || '',
+        }));
+
+        if (formattedTransactions.length > 0) {
+          setTransactions(formattedTransactions);
+        }
+      } catch (error) {
+        console.error('Error fetching transactions:', error);
+      }
+    };
+    fetchTransactions();
+  }, [isOP, token]);
 
   if (!token) return <div>Token not found</div>;
 
@@ -29,8 +63,13 @@ export default function TokenDetails({ id }: { id: string }) {
           <p className="text-xl text-muted-foreground">${token.price.toLocaleString()}</p>
         </div>
         <div className="ml-auto">
-          <Button className="mr-2">Buy</Button>
-          <Button variant="outline">Sell</Button>
+          <Link
+            href={`/buy/${token.id}`}
+            type="button"
+            className="mr-2 inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+          >
+            Buy
+          </Link>
         </div>
       </div>
 
@@ -65,7 +104,7 @@ export default function TokenDetails({ id }: { id: string }) {
       <div>
         <h2 className="mb-4 text-2xl font-bold">Transaction History</h2>
         <div className="space-y-4">
-          {mockTransactions.map((tx) => (
+          {transactions.map((tx) => (
             <TransactionCard
               key={tx.id}
               id={tx.id}

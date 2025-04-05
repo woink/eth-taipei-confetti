@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { GET } from './route';
 import axios from 'axios';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 // Mock axios
 vi.mock('axios');
@@ -31,7 +31,8 @@ describe('GET /api/transactions', () => {
 
     (axios.post as any).mockResolvedValue(mockResponse);
 
-    const response = await GET();
+    const mockRequest = new NextRequest('http://localhost:3000/api/transactions');
+    const response = await GET(mockRequest);
     const data = await response.json();
 
     expect(response.status).toBe(200);
@@ -52,7 +53,8 @@ describe('GET /api/transactions', () => {
       data: { error: 'Internal server error' },
     });
 
-    const response = await GET();
+    const mockRequest = new NextRequest('http://localhost:3000/api/transactions');
+    const response = await GET(mockRequest);
     const data = await response.json();
 
     expect(response.status).toBe(500);
@@ -63,7 +65,8 @@ describe('GET /api/transactions', () => {
     // Mock network error
     (axios.post as any).mockRejectedValue(new Error('Network error'));
 
-    const response = await GET();
+    const mockRequest = new NextRequest('http://localhost:3000/api/transactions');
+    const response = await GET(mockRequest);
     const data = await response.json();
 
     expect(response.status).toBe(500);
