@@ -15,18 +15,32 @@ export function getRandomBytes32(): string {
 export const dynamic = 'force-dynamic';
 export const revalidate = 0; // 0 = always dynamic
 
-const approveABI = [{
-  "constant": false,
-  "inputs": [
+const approveABI = [
+  {
+    "constant": false,
+    "inputs": [
       { "name": "spender", "type": "address" },
       { "name": "amount", "type": "uint256" }
-  ],
-  "name": "approve",
-  "outputs": [{ "name": "", "type": "bool" }],
-  "payable": false,
-  "stateMutability": "nonpayable",
-  "type": "function"
-}];
+    ],
+    "name": "approve",
+    "outputs": [{ "name": "", "type": "bool" }],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      { "name": "owner", "type": "address" },
+      { "name": "spender", "type": "address" }
+    ],
+    "name": "allowance",
+    "outputs": [{ "name": "", "type": "uint256" }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  }
+];
 
 
 export async function GET(
@@ -108,11 +122,18 @@ export async function POST(
   // TODO !!!!!! CHANGE RPC ADDRESS DEPENDING ON CHAIN ID
   const provider = new JsonRpcProvider(nodeUrl);
   const tkn = new Contract(srcTokenAddress, approveABI, new Wallet(makerPrivateKey, provider));
-  await tkn.approve(
-      '0x111111125421ca6dc452d289314280a0f8842a65', // aggregation router v6
-      (2n**256n - 1n) // unlimited allowance
-  );
-  console.log("Added more allowance");
+  const spenderAddress = '0x111111125421ca6dc452d289314280a0f8842a65'; // aggregation router v6
+  const allowance = BigInt(await tkn.allowance(makerAddress, spenderAddress)); // Ensure allowance is a BigInt
+
+  if (allowance < (2n**256n - 1n)) { // Check if allowance is less than unlimited
+    await tkn.approve(
+        spenderAddress,
+        (2n**256n - 1n) // unlimited allowance
+    );
+    console.log("Added more allowance");
+  } else {
+    console.log("Sufficient allowance already exists");
+  }
 
   const quote: Quote = await sdk.getQuote(params);
 
