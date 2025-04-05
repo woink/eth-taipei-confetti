@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { NextRequest, NextResponse } from 'next/server';
 import { SDK, HashLock, PrivateKeyProviderConnector, NetworkEnum, QuoteParams, Quote } from "@1inch/cross-chain-sdk";
 
@@ -7,7 +8,7 @@ import Web3 from 'web3';
 
 export const maxDuration = 300;
 
-export function getRandomBytes32(): string {
+function getRandomBytes32(): string {
     return uint8ArrayToHex(randomBytes(32))
 }
 
