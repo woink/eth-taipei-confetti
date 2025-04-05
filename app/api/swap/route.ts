@@ -178,7 +178,11 @@ export async function POST(
                 console.log(
                   `Fill order found! Secret submitted: ${JSON.stringify(secretHashes[fill.idx], null, 2)}`
                 );
+                // TODO, we can already fill here
+                // return NextResponse.json({ message: 'worked, but cath short', orderHash });
               })
+
+              
               .catch((error) => {
                 console.error(`Error submitting secret: ${JSON.stringify(error, null, 2)}`);
               });
