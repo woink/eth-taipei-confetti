@@ -9,11 +9,10 @@ export async function generateStaticParams() {
   }));
 }
 
-// This is a Server Component that handles the async data fetching
-async function TokenData({ id }: { id: string }) {
-  const token = tokens.find((t) => t.id === id || t.symbol === id);
-  return token ? <TokenDetails id={token.id} /> : <div>Token not found</div>;
-}
+
+export default async function TokenPage({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = await params; // Resolve the Promise
+  const token = tokens.find((t) => t.id === resolvedParams.id || t.symbol === resolvedParams.id);
 
 export default async function TokenPage({ params }: { params: Promise<{ id: string }> }) {
   // Await the params before using them
