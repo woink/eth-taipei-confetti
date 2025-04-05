@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
               rule: 'and',
               children: [
                 {
-                  value: '0x9ad296659d9ad687d3eca1b7c017ed7ed26fdff8',
+                  value: `${process.env.WALLET}`,
                   operator: 'Equal',
                   fieldType: 'input',
                   inputIndex: 1,

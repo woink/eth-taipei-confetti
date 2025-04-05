@@ -6,7 +6,7 @@ import {uint8ArrayToHex} from '@1inch/byte-utils'
 import {randomBytes, solidityPackedKeccak256, Contract, Wallet, JsonRpcProvider} from 'ethers'
 import Web3 from 'web3';
 
-export const maxDuration = 300;
+export const maxDuration = 60;
 
 function getRandomBytes32(): string {
     return uint8ArrayToHex(randomBytes(32))
