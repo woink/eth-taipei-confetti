@@ -72,9 +72,9 @@ export async function POST(
     // @ts-ignore:next-line
     nodeUrl = process.env.RPC_URL_ARBITRUM;
   } else {
-    throw new Error("Unsupported chain ID");}
-
+    throw new Error("Unsupported chain ID");
   }
+
   
   // This is a test account, no funds there
   // @ts-ignore:next-line
