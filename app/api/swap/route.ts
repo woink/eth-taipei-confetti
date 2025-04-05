@@ -44,12 +44,12 @@ const approveABI = [
 ];
 
 
-export async function GET(
-  request: NextRequest
-): Promise<NextResponse> {
+// export async function GET(
+//   request: NextRequest
+// ): Promise<NextResponse> {
 
-  return NextResponse.json({ message: "empty" });
-}
+//   return NextResponse.json({ message: "empty" });
+// }
 
 export async function POST(
   request: NextRequest
