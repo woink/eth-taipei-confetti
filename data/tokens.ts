@@ -31,14 +31,14 @@ export const tokens: Token[] = tokenList.map((token, index) => {
   const priceChange24h = Math.random() * 40 - 20;
 
   return {
-    id: token.symbol,
+    id: `${token.symbol}-${token.chain}`,
     name: token.name,
     symbol: token.symbol,
     price: price,
     priceChange24h: Number(priceChange24h.toFixed(2)),
     marketCap: price * (Math.random() * 1000000), // Random market cap
     volume24h: price * (Math.random() * 100000), // Random 24h volume
-    chain: token.chain, // Default to Ethereum for now
+    chain: token.chain,
     logo: token.logoURI,
     historicalData: generateHistoricalData(30, price),
   };
