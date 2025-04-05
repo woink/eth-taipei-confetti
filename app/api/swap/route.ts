@@ -5,6 +5,7 @@ import {uint8ArrayToHex} from '@1inch/byte-utils'
 import {randomBytes, solidityPackedKeccak256} from 'ethers'
 import Web3 from 'web3';
 
+export const maxDuration = 300;
 
 export function getRandomBytes32(): string {
     return uint8ArrayToHex(randomBytes(32))
@@ -32,6 +33,13 @@ export async function GET(
   request: NextRequest
 ): Promise<NextResponse> {
 
+  return NextResponse.json({ message: "empty" });
+}
+
+export async function POST(
+  request: NextRequest
+): Promise<NextResponse> {
+  
 // this is a test account, no funds there
 // @ts-ignore:next-line
 const makerAddress:string = process.env.WALLET;
@@ -91,73 +99,77 @@ const secretsCount = quote.getPreset().secretsCount;
 // patch quote
 // quote.quoteId = "12345"
 
-  sdk.placeOrder(quote, {
+  try {
+  const quoteResponse = await sdk.placeOrder(quote, {
     walletAddress: makerAddress,
     hashLock,
     secretHashes
-  }).then(quoteResponse => {
+  })
 
-    const orderHash = quoteResponse.orderHash;
+  const orderHash = quoteResponse.orderHash;
 
     console.log(`Order successfully placed`);
 
-    const intervalId = setInterval(() => {
+    let returnLoop = false;
+
+    const intervalId = setInterval(async () => {
         console.log(`Polling for fills until order status is set to "executed"...`);
-        sdk.getOrderStatus(orderHash).then(order => {
+
+        try {
+        const order = await sdk.getOrderStatus(orderHash)
                 if (order.status === 'executed') {
                     console.log(`Order is complete. Exiting.`);
                     clearInterval(intervalId);
                 }
-            }
-        ).catch(error =>
-            console.error(`Error: ${JSON.stringify(error, null, 2)}`)
-        );
 
-        sdk.getReadyToAcceptSecretFills(orderHash)
-            .then((fillsObject) => {
-                if (fillsObject.fills.length > 0) {
-                    fillsObject.fills.forEach(fill => {
-                        sdk.submitSecret(orderHash, secrets[fill.idx])
-                            .then(() => {
-                                console.log(`Fill order found! Secret submitted: ${JSON.stringify(secretHashes[fill.idx], null, 2)}`);
-                            })
-                            .catch((error) => {
-                                console.error(`Error submitting secret: ${JSON.stringify(error, null, 2)}`);
-                            });
-                    });
-                }
-            })
-            .catch((error) => {
-                if (error.response) {
-                    // The request was made and the server responded with a status code
-                    // that falls out of the range of 2xx
-                    console.error('Error getting ready to accept secret fills:', {
-                        status: error.response.status,
-                        statusText: error.response.statusText,
-                        data: error.response.data
-                    });
-                } else if (error.request) {
-                    // The request was made but no response was received
-                    console.error('No response received:', error.request);
-                } else {
-                    // Something happened in setting up the request that triggered an Error
-                    console.error('Error', error.message);
-                }
+              } catch (error) {
+
+                console.error(`Error: ${JSON.stringify(error, null, 2)}`)
+              }
+
+
+        try {
+        const fillsObject = await sdk.getReadyToAcceptSecretFills(orderHash)
+        if (fillsObject.fills.length > 0) {
+          fillsObject.fills.forEach(fill => {
+              sdk.submitSecret(orderHash, secrets[fill.idx])
+                  .then(() => {
+                      console.log(`Fill order found! Secret submitted: ${JSON.stringify(secretHashes[fill.idx], null, 2)}`);
+                  })
+                  .catch((error) => {
+                      console.error(`Error submitting secret: ${JSON.stringify(error, null, 2)}`);
+                  });
+          });
+      }
+        } catch(error:any) {
+          if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            console.error('Error getting ready to accept secret fills:', {
+                status: error.response.status,
+                statusText: error.response.statusText,
+                data: error.response.data
             });
+        } else if (error.request) {
+            // The request was made but no response was received
+            console.error('No response received:', error.request);
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            console.error('Error', error.message);
+        }
+        }
+
     }, 5000);
-  }).catch((error) => {
+
+  } catch (error) {
     console.dir(error, { depth: null });
-  });
-  // .catch(console.error)
-  // .then(console.log);
+  }
 
-  return NextResponse.json({ message: "empty" });
-}
 
-export async function POST(
-  request: NextRequest
-): Promise<NextResponse> {
-  const body = await request.json();
-  // Process the data...
-  return NextResponse.json({ status: 'success' });
+    
+
+    // 
+
+
+  return NextResponse.json({ message: "worked" });
 }
