@@ -15,10 +15,10 @@ const price_hardcode = {
   ARB: 0.3
 }
 
-export default function PortfolioSummary({ 
-  portfolio, 
-  onRefresh 
-}: { 
+export default function PortfolioSummary({
+  portfolio,
+  onRefresh,
+}: {
   portfolio: Portfolio;
   onRefresh?: () => void;
 }) {
@@ -32,14 +32,14 @@ export default function PortfolioSummary({
 
         // Define token addresses and ABI for both chains
         const tokenList = [
-          { address: '0x4200000000000000000000000000000000000042', symbol: 'OP', chain: 'OP' },  // OP on Optimism
+          { address: '0x4200000000000000000000000000000000000042', symbol: 'OP', chain: 'OP' }, // OP on Optimism
           { address: '0x6B175474E89094C44Da98b954EedeAC495271d0F', symbol: 'USDC', chain: 'OP' }, // USDC on Optimism
           { address: '0x912CE59144191C1204E64559FE8253a0e49E6548', symbol: 'ARB', chain: 'ARB' }, // ARB on Arbitrum
         ];
 
         const tokenAbi = [
           'function balanceOf(address owner) view returns (uint256)',
-          'function decimals() view returns (uint8)'
+          'function decimals() view returns (uint8)',
         ];
 
         // Define providers for each chain
@@ -52,19 +52,21 @@ export default function PortfolioSummary({
         const walletAddress = WALLET;
 
         if (!walletAddress) {
-          throw new Error("Wallet address is not defined in environment variables");
+          throw new Error('Wallet address is not defined in environment variables');
         }
 
         // Fetch balance for all tokens across chains
         const balancePromises = tokenList.map(async (token) => {
-          const provider = providers[token.chain];
+          const provider = providers[token.chain as keyof typeof providers];
           const contract = new ethers.Contract(token.address, tokenAbi, provider);
 
           // Validate if the contract implements the balanceOf method
           try {
             const code = await provider.getCode(token.address);
-            if (code === "0x") {
-              console.warn(`Contract at address ${token.address} does not exist or is not deployed.`);
+            if (code === '0x') {
+              console.warn(
+                `Contract at address ${token.address} does not exist or is not deployed.`
+              );
               return 0; // Skip this token
             }
 
@@ -73,11 +75,14 @@ export default function PortfolioSummary({
             const adjustedBalance = parseFloat(ethers.formatUnits(balance, decimals));
 
             // Fetch token price from hardcoded values
-            const price = price_hardcode[token.symbol];
+            const price = price_hardcode[token.symbol as keyof typeof price_hardcode];
 
             return adjustedBalance * price;
           } catch (error) {
-            console.error(`Error fetching balance for token ${token.address} on ${token.chain}:`, error);
+            console.error(
+              `Error fetching balance for token ${token.address} on ${token.chain}:`,
+              error
+            );
             return 0; // Skip this token
           }
         });
@@ -92,7 +97,7 @@ export default function PortfolioSummary({
           await onRefresh();
         }
       } catch (error) {
-        console.error("Error fetching portfolio balances:", error);
+        console.error('Error fetching portfolio balances:', error);
       } finally {
         setIsLoading(false);
       }
@@ -115,7 +120,9 @@ export default function PortfolioSummary({
             <h2
               className={`text-2xl font-bold ${portfolio.totalPnl >= 0 ? 'text-green-500' : 'text-red-500'}`}
             >
-              {isLoading ? 'Loading...' : `${portfolio.totalPnl >= 0 ? '+' : ''}${portfolio.totalPnlPercentage.toFixed(2)}%`}
+              {isLoading
+                ? 'Loading...'
+                : `${portfolio.totalPnl >= 0 ? '+' : ''}${portfolio.totalPnlPercentage.toFixed(2)}%`}
             </h2>
             <p className="text-muted-foreground">24h Change</p>
           </div>
