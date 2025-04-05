@@ -20,20 +20,25 @@ export async function GET(
 ): Promise<NextResponse> {
 
 // this is a test account, no funds there
-const makerPrivateKey = "d31cdb358bc76e9ba9b03da79405c40f9dc75efc0fb85f6e93ec3f65760e984b";
-const makerAddress = "0x9Ef276Ae9431355Ca4b261d279Ca8018c3c2f923";
+// @ts-ignore:next-line
+const makerAddress:string = process.env.WALLET;
+// @ts-ignore:next-line
+const makerPrivateKey:string = process.env.PRIVATE_KEY;
+
+console.log("makerPrivateKey", makerPrivateKey);
+console.log("makerAddress", makerAddress)
 // receiver address?
 
 
 // what chain is this, I'd assume the source?
 const nodeUrl = "https://mainnet.optimism.io";
 
-// @ts-ignore:next-line
+
 const blockchainProvider = new PrivateKeyProviderConnector(makerPrivateKey, new Web3(nodeUrl));
 
   const sdk = new SDK({
     url: "https://api.1inch.dev/fusion-plus",
-    authKey: "ePOggvvA8VHSlr399qahke9fDkyR9zKs",
+    authKey: process.env.ONE_INCH_API_KEY,
     blockchainProvider
   });
 
@@ -47,7 +52,7 @@ const params: QuoteParams = {
   // TODO swich this
   srcTokenAddress: "0x4200000000000000000000000000000000000042", // OP token
   dstTokenAddress: "0x912CE59144191C1204E64559FE8253a0e49E6548", // ARB token
-  amount: "1000000000000000000000",
+  amount: "100000000000000000",
   enableEstimate: true
 };
 
@@ -69,25 +74,33 @@ const hashLock =
         })[]
       );
 
-console.log("quote", quote);
+// console.log("quote", quote);
 
 // TODO, is this supposed to be there?
 // patch quote
 // quote.quoteId = "12345"
 
-sdk
-  .placeOrder(quote, {
-    walletAddress: makerAddress,
-    hashLock,
-    secretHashes,
-    // fee is an optional field
-    // fee: {
-    //   takingFeeBps: 100, // 1% as we use bps format, 1% is equal to 100bps
-    // TODO what is this?
-    //   takingFeeReceiver: "0x0000000000000000000000000000000000000000" //  fee receiver address
-    // }
-  })
-  .then(console.log);
+let response:any
+try{
+  response = await sdk
+    .placeOrder(quote, {
+      walletAddress: makerAddress,
+      hashLock,
+      secretHashes
+      // fee is an optional field
+      // fee: {
+      //   takingFeeBps: 100, // 1% as we use bps format, 1% is equal to 100bps
+      // TODO what is this?
+      //   takingFeeReceiver: "0x0000000000000000000000000000000000000000" //  fee receiver address
+      // }
+    })
+} catch(e){
+  console.error("Error placing order", e.response);
+  return NextResponse.json({ message: "error" });
+}
+console.log("response", response);
+  // .catch(console.error)
+  // .then(console.log);
 
   return NextResponse.json({ message: "empty" });
 }
