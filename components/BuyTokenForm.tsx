@@ -17,7 +17,8 @@ export function BuyTokenForm({ token }: BuyTokenFormProps) {
           <Image
             src={token.logo}
             alt={`${token.name} logo`}
-            fill
+            height={48}
+            width={48}
             className="rounded-full object-cover"
           />
         </div>
