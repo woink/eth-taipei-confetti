@@ -1,5 +1,6 @@
 import { tokens } from '@/data/tokens';
 import TokenDetails from '@/components/TokenDetails';
+import { Suspense } from 'react';
 
 // Generate static pages for all tokens in our mock data
 export async function generateStaticParams() {
@@ -8,21 +9,20 @@ export async function generateStaticParams() {
   }));
 }
 
+
 export default async function TokenPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params; // Resolve the Promise
   const token = tokens.find((t) => t.id === resolvedParams.id || t.symbol === resolvedParams.id);
 
-  if (!token) {
-    return (
-      <main className="container mx-auto max-w-4xl px-4 py-8">
-        <div>Token not found</div>
-      </main>
-    );
-  }
+export default async function TokenPage({ params }: { params: Promise<{ id: string }> }) {
+  // Await the params before using them
+  const { id } = await params;
 
   return (
     <main className="container mx-auto max-w-4xl px-4 py-8">
-      <TokenDetails id={token.id} />
+      <Suspense fallback={<div>Loading token details...</div>}>
+        <TokenData id={id} />
+      </Suspense>
     </main>
   );
 }
