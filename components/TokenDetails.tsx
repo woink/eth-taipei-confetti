@@ -9,19 +9,19 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import PortfolioChart from './PortfolioChart';
 import TransactionCard from './TransactionCard';
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 
 export default function TokenDetails({ id }: { id: string }) {
   const router = useRouter();
   const token = useMemo(() => tokens.find((t) => t.id === id), [id]);
   const [transactions, setTransactions] = useState(mockTransactions);
-  const isOP = token?.symbol === 'OP';
 
   useEffect(() => {
-    const fetchTransactions = async () => {
-      if (!isOP) return;
+    const isARB = token?.symbol === 'ARB';
+    if (!isARB) return;
 
+    const fetchTransactions = async () => {
       try {
         const response = await fetch('/api/transactions/');
         const data = await response.json();
@@ -38,15 +38,14 @@ export default function TokenDetails({ id }: { id: string }) {
             chain: token?.chain || '',
           }));
 
-        if (formattedTransactions.length > 0) {
-          setTransactions(formattedTransactions);
-        }
+        setTransactions(formattedTransactions);
+        console.log('formattedTransactions', formattedTransactions);
       } catch (error) {
         console.error('Error fetching transactions:', error);
       }
     };
     fetchTransactions();
-  }, [isOP, token]);
+  }, [token]);
 
   if (!token) return <div>Token not found</div>;
 
@@ -103,17 +102,19 @@ export default function TokenDetails({ id }: { id: string }) {
       <div>
         <h2 className="mb-4 text-2xl font-bold">Transaction History</h2>
         <div className="space-y-4">
-          {transactions.map((tx) => (
-            <TransactionCard
-              key={tx.id}
-              id={tx.id}
-              type={tx.type}
-              amount={tx.amount}
-              tokenSymbol={tx.token.symbol}
-              timestamp={tx.timestamp}
-              price={tx.price}
-            />
-          ))}
+          <Suspense fallback={<div>Loading...</div>}>
+            {transactions.map((tx) => (
+              <TransactionCard
+                key={tx.id}
+                id={tx.id}
+                type={tx.type}
+                amount={tx.amount}
+                tokenSymbol={tx.token.symbol}
+                timestamp={tx.timestamp}
+                price={tx.price}
+              />
+            ))}
+          </Suspense>
         </div>
       </div>
     </div>
