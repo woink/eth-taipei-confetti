@@ -1,6 +1,7 @@
 import { Portfolio, Token, Transaction } from '@/types';
 
 // Generate mock historical data for charts
+// Mocked, because it's a hackathon (if you read this, dm on twitter me @martinvol)
 const generateHistoricalData = (days: number, startValue: number, volatility: number = 0.02) => {
   const data = [];
   let currentValue = startValue;
@@ -59,9 +60,9 @@ export const mockPortfolio: Portfolio = {
     pnlPercentage: Math.random() * 20 - 10,
   })),
   totalValue: 123500,
-  totalPnl: 12500,
-  totalPnlPercentage: 11.2,
-  historicalData: generateHistoricalData(30, 123500),
+  totalPnl: 0.11,
+  totalPnlPercentage: 1.2,
+  historicalData: generateHistoricalData(30, 9.4),
 };
 
 export const mockTransactions: Transaction[] = [

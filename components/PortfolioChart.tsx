@@ -16,8 +16,8 @@ export default function PortfolioChart({ data }: PortfolioChartProps) {
         <AreaChart data={data}>
           <defs>
             <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="hsl(var(--chart-1))" stopOpacity={0.3} />
-              <stop offset="95%" stopColor="hsl(var(--chart-1))" stopOpacity={0} />
+              <stop offset="5%" stopColor="green" stopOpacity={0.3} />
+              <stop offset="95%" stopColor="green" stopOpacity={0} />
             </linearGradient>
           </defs>
           <XAxis
@@ -48,7 +48,7 @@ export default function PortfolioChart({ data }: PortfolioChartProps) {
           <Area
             type="monotone"
             dataKey="value"
-            stroke="hsl(var(--chart-1))"
+            stroke="green"
             fillOpacity={1}
             fill="url(#colorValue)"
           />
