@@ -26,8 +26,11 @@ export default function TokenList({ portfolio }: { portfolio: Portfolio }) {
                 className="h-10 w-10"
               />
               <div>
-                <h3 className="font-semibold">{token.name}</h3>
-                <p className="text-sm text-muted-foreground">{token.symbol}</p>
+                <div className="flex items-center gap-2">
+                  <h3 className="font-semibold">{token.name}</h3>
+                  <p className="text-sm text-muted-foreground">{token.symbol}</p>
+                </div>
+                <p className="text-xs text-muted-foreground">{token.chain}</p>
               </div>
             </div>
             <div className="text-right">
