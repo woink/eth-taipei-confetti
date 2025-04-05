@@ -14,6 +14,19 @@ export function getRandomBytes32(): string {
 export const dynamic = 'force-dynamic';
 export const revalidate = 0; // 0 = always dynamic
 
+const approveABI = [{
+  "constant": false,
+  "inputs": [
+      { "name": "spender", "type": "address" },
+      { "name": "amount", "type": "uint256" }
+  ],
+  "name": "approve",
+  "outputs": [{ "name": "", "type": "bool" }],
+  "payable": false,
+  "stateMutability": "nonpayable",
+  "type": "function"
+}];
+
 
 export async function GET(
   request: NextRequest
@@ -53,6 +66,7 @@ const params: QuoteParams = {
   srcTokenAddress: "0x4200000000000000000000000000000000000042", // OP token
   dstTokenAddress: "0x912CE59144191C1204E64559FE8253a0e49E6548", // ARB token
   amount: "100000000000000000",
+  walletAddress: makerAddress,
   enableEstimate: true
 };
 
@@ -60,19 +74,16 @@ const quote:Quote = await sdk.getQuote(params);
 
 const secretsCount = quote.getPreset().secretsCount;
 
-const secrets = Array.from({ length: secretsCount }).map(() => getRandomBytes32());
-const secretHashes = secrets.map((x) => HashLock.hashSecret(x));
+        const secrets = Array.from({ length: secretsCount }).map(() => getRandomBytes32());
+        const secretHashes = secrets.map(x => HashLock.hashSecret(x));
 
-const hashLock =
-  secretsCount === 1
-    ? HashLock.forSingleFill(secrets[0])
-    : HashLock.forMultipleFills(
-        secretHashes.map((secretHash, i) =>
-          solidityPackedKeccak256(["uint64", "bytes32"], [i, secretHash.toString()])
-        ) as (string & {
-          _tag: "MerkleLeaf";
-        })[]
-      );
+        const hashLock = secretsCount === 1
+            ? HashLock.forSingleFill(secrets[0])
+            : HashLock.forMultipleFills(
+                secretHashes.map((secretHash, i) =>
+                    solidityPackedKeccak256(['uint64', 'bytes32'], [i, secretHash.toString()])
+                )
+            );
 
 // console.log("quote", quote);
 
@@ -80,25 +91,63 @@ const hashLock =
 // patch quote
 // quote.quoteId = "12345"
 
-let response:any
-try{
-  response = await sdk
-    .placeOrder(quote, {
-      walletAddress: makerAddress,
-      hashLock,
-      secretHashes
-      // fee is an optional field
-      // fee: {
-      //   takingFeeBps: 100, // 1% as we use bps format, 1% is equal to 100bps
-      // TODO what is this?
-      //   takingFeeReceiver: "0x0000000000000000000000000000000000000000" //  fee receiver address
-      // }
-    })
-} catch(e){
-  console.error("Error placing order", e.response);
-  return NextResponse.json({ message: "error" });
-}
-console.log("response", response);
+  sdk.placeOrder(quote, {
+    walletAddress: makerAddress,
+    hashLock,
+    secretHashes
+  }).then(quoteResponse => {
+
+    const orderHash = quoteResponse.orderHash;
+
+    console.log(`Order successfully placed`);
+
+    const intervalId = setInterval(() => {
+        console.log(`Polling for fills until order status is set to "executed"...`);
+        sdk.getOrderStatus(orderHash).then(order => {
+                if (order.status === 'executed') {
+                    console.log(`Order is complete. Exiting.`);
+                    clearInterval(intervalId);
+                }
+            }
+        ).catch(error =>
+            console.error(`Error: ${JSON.stringify(error, null, 2)}`)
+        );
+
+        sdk.getReadyToAcceptSecretFills(orderHash)
+            .then((fillsObject) => {
+                if (fillsObject.fills.length > 0) {
+                    fillsObject.fills.forEach(fill => {
+                        sdk.submitSecret(orderHash, secrets[fill.idx])
+                            .then(() => {
+                                console.log(`Fill order found! Secret submitted: ${JSON.stringify(secretHashes[fill.idx], null, 2)}`);
+                            })
+                            .catch((error) => {
+                                console.error(`Error submitting secret: ${JSON.stringify(error, null, 2)}`);
+                            });
+                    });
+                }
+            })
+            .catch((error) => {
+                if (error.response) {
+                    // The request was made and the server responded with a status code
+                    // that falls out of the range of 2xx
+                    console.error('Error getting ready to accept secret fills:', {
+                        status: error.response.status,
+                        statusText: error.response.statusText,
+                        data: error.response.data
+                    });
+                } else if (error.request) {
+                    // The request was made but no response was received
+                    console.error('No response received:', error.request);
+                } else {
+                    // Something happened in setting up the request that triggered an Error
+                    console.error('Error', error.message);
+                }
+            });
+    }, 5000);
+  }).catch((error) => {
+    console.dir(error, { depth: null });
+  });
   // .catch(console.error)
   // .then(console.log);
 
