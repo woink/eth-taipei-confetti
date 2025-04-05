@@ -29,14 +29,12 @@ export default function PortfolioSummary({
     const fetchBalances = async () => {
       try {
         setIsLoading(true);
-        
-        // Update balance with hardcoded number
-        // Import ethers at the top of your file
 
-        // Define token addresses and ABI
+        // Define token addresses and ABI for both chains
         const tokenList = [
-          { address: '0x4200000000000000000000000000000000000042', symbol: 'OP' },  // DAI
-          { address: '0x6B175474E89094C44Da98b954EedeAC495271d0F', symbol: 'USDC' }, // USDC
+          { address: '0x4200000000000000000000000000000000000042', symbol: 'OP', chain: 'OP' },  // OP on Optimism
+          { address: '0x6B175474E89094C44Da98b954EedeAC495271d0F', symbol: 'USDC', chain: 'OP' }, // USDC on Optimism
+          { address: '0x912CE59144191C1204E64559FE8253a0e49E6548', symbol: 'ARB', chain: 'ARB' }, // ARB on Arbitrum
         ];
 
         const tokenAbi = [
@@ -44,19 +42,22 @@ export default function PortfolioSummary({
           'function decimals() view returns (uint8)'
         ];
 
-        // Use a provider
-        console.log("process.env.NEXT_PUBLIC_RPC_URL_OP", process.env.NEXT_PUBLIC_RPC_URL_OP)
-        const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_URL_OP);
+        // Define providers for each chain
+        const providers = {
+          OP: new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_URL_OP),
+          ARB: new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_URL_ARBITRUM),
+        };
 
-        // Get wallet address from portfolio or use a default
-        const walletAddress = WALLET; // Fallback address
-        
+        // Get wallet address from environment variables
+        const walletAddress = WALLET;
+
         if (!walletAddress) {
           throw new Error("Wallet address is not defined in environment variables");
         }
 
-        // Fetch balance for all tokens
+        // Fetch balance for all tokens across chains
         const balancePromises = tokenList.map(async (token) => {
+          const provider = providers[token.chain];
           const contract = new ethers.Contract(token.address, tokenAbi, provider);
 
           // Validate if the contract implements the balanceOf method
@@ -68,28 +69,25 @@ export default function PortfolioSummary({
             }
 
             const balance = await contract.balanceOf(walletAddress);
-            // const adjustedBalance = balance; // BigInt
-            console.log("token.symbol", token.symbol)
             const decimals = await contract.decimals();
-            console.log("decimals", decimals)
-            const adjustedBalance = BigInt(parseFloat(ethers.formatUnits(balance, decimals)));
+            const adjustedBalance = parseFloat(ethers.formatUnits(balance, decimals));
 
-            // Fetch token price from an API (placeholder)
-            const price = price_hardcode[token.symbol]; // Convert price to BigInt for multiplication
+            // Fetch token price from hardcoded values
+            const price = price_hardcode[token.symbol];
 
-            return Number(adjustedBalance) * price; // Convert result back to a number if needed
+            return adjustedBalance * price;
           } catch (error) {
-            console.error(`Error fetching balance for token ${token.address}:`, error);
+            console.error(`Error fetching balance for token ${token.address} on ${token.chain}:`, error);
             return 0; // Skip this token
           }
         });
 
         // Wait for all balance promises to resolve
         const tokenBalances = await Promise.all(balancePromises);
-        const hardcodedBalance = tokenBalances.reduce((sum, value) => sum + value, 0);
+        const totalBalance = tokenBalances.reduce((sum, value) => sum + value, 0);
 
-        setBalance(hardcodedBalance);
-        
+        setBalance(totalBalance);
+
         if (onRefresh) {
           await onRefresh();
         }
