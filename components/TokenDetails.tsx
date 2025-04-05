@@ -3,10 +3,12 @@
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ArrowUpRight, ArrowDownRight, ArrowLeft } from 'lucide-react';
-import { tokens, mockTransactions } from '@/data/mockData';
+import { tokens } from '@/data/tokens';
+import { mockTransactions } from '@/data/mockData';
 import { useRouter } from 'next/navigation';
-import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
 import Image from 'next/image';
+import PortfolioChart from './PortfolioChart';
+import TransactionCard from './TransactionCard';
 
 export default function TokenDetails({ id }: { id: string }) {
   const router = useRouter();
@@ -55,50 +57,7 @@ export default function TokenDetails({ id }: { id: string }) {
         </div>
 
         <div className="h-[300px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={token.historicalData}>
-              <defs>
-                <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="hsl(var(--chart-1))" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="hsl(var(--chart-1))" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <XAxis
-                dataKey="date"
-                tickLine={false}
-                axisLine={false}
-                tick={{ fontSize: 12 }}
-                tickFormatter={(value) =>
-                  new Date(value).toLocaleDateString(undefined, {
-                    month: 'short',
-                    day: 'numeric',
-                  })
-                }
-              />
-              <YAxis
-                tickLine={false}
-                axisLine={false}
-                tick={{ fontSize: 12 }}
-                tickFormatter={(value) => `$${value.toLocaleString()}`}
-              />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: 'hsl(var(--background))',
-                  border: '1px solid hsl(var(--border))',
-                  borderRadius: '8px',
-                }}
-                formatter={(value: number) => [`$${value.toLocaleString()}`, 'Value']}
-                labelFormatter={(label) => new Date(label).toLocaleDateString()}
-              />
-              <Area
-                type="monotone"
-                dataKey="value"
-                stroke="hsl(var(--chart-1))"
-                fillOpacity={1}
-                fill="url(#colorValue)"
-              />
-            </AreaChart>
-          </ResponsiveContainer>
+          <PortfolioChart data={token.historicalData} />
         </div>
       </Card>
 
@@ -106,26 +65,15 @@ export default function TokenDetails({ id }: { id: string }) {
         <h2 className="mb-4 text-2xl font-bold">Transaction History</h2>
         <div className="space-y-4">
           {mockTransactions.map((tx) => (
-            <Card key={tx.id} className="p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  {tx.type === 'buy' ? (
-                    <ArrowUpRight className="text-green-500" />
-                  ) : (
-                    <ArrowDownRight className="text-red-500" />
-                  )}
-                  <div>
-                    <p className="font-medium">
-                      {tx.type === 'buy' ? 'Bought' : 'Sold'} {tx.amount} {tx.token.symbol}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {new Date(tx.timestamp).toLocaleDateString()}
-                    </p>
-                  </div>
-                </div>
-                <p className="font-medium">${tx.price.toLocaleString()}</p>
-              </div>
-            </Card>
+            <TransactionCard
+              key={tx.id}
+              id={tx.id}
+              type={tx.type}
+              amount={tx.amount}
+              tokenSymbol={tx.token.symbol}
+              timestamp={tx.timestamp}
+              price={tx.price}
+            />
           ))}
         </div>
       </div>
