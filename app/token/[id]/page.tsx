@@ -8,9 +8,9 @@ export async function generateStaticParams() {
   }));
 }
 
-export default async function TokenPage({ params }: { params: { id: string } }) {
-  // Find token by ID or by symbol (for backward compatibility)
-  const token = tokens.find((t) => t.id === params.id || t.symbol === params.id);
+export default async function TokenPage({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = await params; // Resolve the Promise
+  const token = tokens.find((t) => t.id === resolvedParams.id || t.symbol === resolvedParams.id);
 
   if (!token) {
     return (
