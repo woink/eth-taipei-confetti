@@ -10,7 +10,7 @@ export default function TokenList({ portfolio }: { portfolio: Portfolio }) {
 
   return (
     <div className="space-y-4">
-      {portfolio.tokens.map(({ token, amount, value, pnl, pnlPercentage }) => (
+      {portfolio.tokens.map(({ token, value, pnl, pnlPercentage }) => (
         <Card
           key={token.id}
           className="cursor-pointer p-4 transition-colors hover:bg-accent/50"
