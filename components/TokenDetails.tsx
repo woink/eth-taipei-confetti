@@ -9,10 +9,11 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import PortfolioChart from './PortfolioChart';
 import TransactionCard from './TransactionCard';
+import { useMemo } from 'react';
 
 export default function TokenDetails({ id }: { id: string }) {
   const router = useRouter();
-  const token = tokens.find((t) => t.id === id);
+  const token = useMemo(() => tokens.find((t) => t.id === id), [id]);
 
   if (!token) return <div>Token not found</div>;
 
