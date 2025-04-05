@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Plus } from 'lucide-react';
 
 export default function Home() {
+  const portfolio = mockPortfolio;
   return (
     <main className="container mx-auto max-w-4xl px-4 py-8">
       <div className="mb-8 flex items-center justify-between">
@@ -19,8 +20,8 @@ export default function Home() {
       </div>
 
       <div className="space-y-8">
-        <PortfolioSummary portfolio={mockPortfolio} />
-        <TokenList portfolio={mockPortfolio} />
+        <PortfolioSummary portfolio={portfolio} />
+        <TokenList portfolio={portfolio} />
       </div>
     </main>
   );
