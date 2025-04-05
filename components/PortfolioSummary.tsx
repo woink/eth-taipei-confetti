@@ -5,8 +5,15 @@ import { Card } from '@/components/ui/card';
 import PortfolioChart from './PortfolioChart';
 import { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
+import { symbol } from 'zod';
 
 const WALLET = process.env.NEXT_PUBLIC_WALLET;
+
+const price_hardcode = {
+  OP: 0.7,
+  USDC: 1,
+  ARB: 0.3
+}
 
 export default function PortfolioSummary({ 
   portfolio, 
@@ -38,6 +45,7 @@ export default function PortfolioSummary({
         ];
 
         // Use a provider
+        console.log("process.env.NEXT_PUBLIC_RPC_URL_OP", process.env.NEXT_PUBLIC_RPC_URL_OP)
         const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_URL_OP);
 
         // Get wallet address from portfolio or use a default
@@ -60,13 +68,16 @@ export default function PortfolioSummary({
             }
 
             const balance = await contract.balanceOf(walletAddress);
+            // const adjustedBalance = balance; // BigInt
+            console.log("token.symbol", token.symbol)
             const decimals = await contract.decimals();
-            const adjustedBalance = parseFloat(ethers.utils.formatUnits(balance, decimals));
+            console.log("decimals", decimals)
+            const adjustedBalance = BigInt(parseFloat(ethers.formatUnits(balance, decimals)));
 
             // Fetch token price from an API (placeholder)
-            const price = 1; // Replace with actual price fetching logic
+            const price = price_hardcode[token.symbol]; // Convert price to BigInt for multiplication
 
-            return adjustedBalance * price;
+            return Number(adjustedBalance) * price; // Convert result back to a number if needed
           } catch (error) {
             console.error(`Error fetching balance for token ${token.address}:`, error);
             return 0; // Skip this token
