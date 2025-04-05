@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   // TODO: rename to project name
-  title: 'Confeti',
+  title: 'Confeti - Trade anything',
   description: 'Confetti enables simple & seamless crypto trades for all. Built for tomorrow’s digital economy.',
 };
 
