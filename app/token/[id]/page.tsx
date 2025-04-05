@@ -14,14 +14,13 @@ export default async function TokenPage({ params }: { params: Promise<{ id: stri
   const resolvedParams = await params; // Resolve the Promise
   const token = tokens.find((t) => t.id === resolvedParams.id || t.symbol === resolvedParams.id);
 
-export default async function TokenPage({ params }: { params: Promise<{ id: string }> }) {
   // Await the params before using them
   const { id } = await params;
 
   return (
     <main className="container mx-auto max-w-4xl px-4 py-8">
       <Suspense fallback={<div>Loading token details...</div>}>
-        <TokenData id={id} />
+        <TokenDetails id={id} />
       </Suspense>
     </main>
   );

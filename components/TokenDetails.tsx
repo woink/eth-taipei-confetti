@@ -29,15 +29,16 @@ export default function TokenDetails({ id }: { id: string }) {
         console.log('response data:', data);
         // Transform the API data to match our Transaction type
 
-        const formattedTransactions = data.map((tx: any) => ({
-          id: tx.tx_hash,
-          type: 'buy' as const,
-          amount: Number(tx.tokens).toFixed(6),
-          price: Number(tx.tokens) * 1787.71, // Using current token price since API doesn't provide historical prices
-          timestamp: new Date(tx.timestamp),
-          token: token!,
-          chain: token?.chain || '',
-        }));
+        const formattedTransactions = () =>
+          data.map((tx: any) => ({
+            id: tx.tx_hash,
+            type: 'buy' as const,
+            amount: Number(tx.tokens).toFixed(6),
+            price: Number(tx.tokens) * 1787.71,
+            timestamp: new Date(tx.timestamp),
+            token: token!,
+            chain: token?.chain || '',
+          }));
 
         if (formattedTransactions.length > 0) {
           setTransactions(formattedTransactions);
@@ -60,7 +61,7 @@ export default function TokenDetails({ id }: { id: string }) {
         <Image src={token.logo} alt={token.name} width={64} height={64} className="h-16 w-16" />
         <div>
           <h1 className="text-3xl font-bold">{token.name}</h1>
-          <p className="text-xl text-muted-foreground">${token.price.toLocaleString()}</p>
+          <p className="text-xl text-muted-foreground">${token.price}</p>
         </div>
         <div className="ml-auto">
           <Link
