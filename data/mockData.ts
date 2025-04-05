@@ -51,11 +51,10 @@ export const tokens: Token[] = [
 ];
 
 export const mockPortfolio: Portfolio = {
-
   tokens: tokens.map((token) => ({
     token,
     amount: Math.random() * 10,
-    value: Math.random() * 50000,
+    value: Math.random() * 10,
     pnl: Math.random() * 5000 - 2500,
     pnlPercentage: Math.random() * 20 - 10,
   })),
