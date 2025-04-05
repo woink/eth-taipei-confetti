@@ -11,9 +11,6 @@ export async function generateStaticParams() {
 
 
 export default async function TokenPage({ params }: { params: Promise<{ id: string }> }) {
-  const resolvedParams = await params; // Resolve the Promise
-  const token = tokens.find((t) => t.id === resolvedParams.id || t.symbol === resolvedParams.id);
-
   // Await the params before using them
   const { id } = await params;
 

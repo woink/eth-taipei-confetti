@@ -24,9 +24,7 @@ export default function TokenDetails({ id }: { id: string }) {
 
       try {
         const response = await fetch('/api/transactions/');
-        console.log('response status:', response.status);
         const data = await response.json();
-        console.log('response data:', data);
         // Transform the API data to match our Transaction type
 
         const formattedTransactions = () =>

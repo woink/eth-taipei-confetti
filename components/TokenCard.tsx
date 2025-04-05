@@ -35,7 +35,7 @@ export function TokenCard({ token }: TokenCardProps) {
       </div>
       <div className="flex items-center gap-4">
         <div className="text-right">
-          <p className="font-semibold">${token.price.toFixed(2)}</p>
+          <p className="font-semibold">{token.price.toFixed(2)}</p>
           <p className={`text-sm ${token.priceChange24h >= 0 ? 'text-green-500' : 'text-red-500'}`}>
             {token.priceChange24h >= 0 ? '+' : ''}
             {token.priceChange24h.toFixed(2)}%

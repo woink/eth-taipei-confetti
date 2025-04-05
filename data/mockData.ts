@@ -24,15 +24,15 @@ const generateHistoricalData = (days: number, startValue: number, volatility: nu
 
 export const tokens: Token[] = [
   {
-    id: 'ETH-Arbitrum',
-    name: 'Ether',
-    symbol: 'ETH',
+    id: 'ARB-Arbitrum',
+    name: 'Arbitrum',
+    symbol: 'ARB',
     price: 3450.75,
     priceChange24h: 5.2,
     marketCap: 415000000000,
     volume24h: 15000000000,
     chain: 'Arbitrum',
-    logo: 'https://tokens.1inch.io/0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.png',
+    logo: 'https://tokens.1inch.io/0x912ce59144191c1204e64559fe8253a0e49e6548.png',
     historicalData: generateHistoricalData(30, 3450.75),
   },
   {
