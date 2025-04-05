@@ -4,6 +4,9 @@ import { Portfolio } from '@/types';
 import { Card } from '@/components/ui/card';
 import PortfolioChart from './PortfolioChart';
 import { useEffect, useState } from 'react';
+import { ethers } from 'ethers';
+
+const WALLET = process.env.NEXT_PUBLIC_WALLET;
 
 export default function PortfolioSummary({ 
   portfolio, 
@@ -21,7 +24,59 @@ export default function PortfolioSummary({
         setIsLoading(true);
         
         // Update balance with hardcoded number
-        const hardcodedBalance = 12345.67;
+        // Import ethers at the top of your file
+
+        // Define token addresses and ABI
+        const tokenList = [
+          { address: '0x4200000000000000000000000000000000000042', symbol: 'OP' },  // DAI
+          { address: '0x6B175474E89094C44Da98b954EedeAC495271d0F', symbol: 'USDC' }, // USDC
+        ];
+
+        const tokenAbi = [
+          'function balanceOf(address owner) view returns (uint256)',
+          'function decimals() view returns (uint8)'
+        ];
+
+        // Use a provider
+        const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_URL_OP);
+
+        // Get wallet address from portfolio or use a default
+        const walletAddress = WALLET; // Fallback address
+        
+        if (!walletAddress) {
+          throw new Error("Wallet address is not defined in environment variables");
+        }
+
+        // Fetch balance for all tokens
+        const balancePromises = tokenList.map(async (token) => {
+          const contract = new ethers.Contract(token.address, tokenAbi, provider);
+
+          // Validate if the contract implements the balanceOf method
+          try {
+            const code = await provider.getCode(token.address);
+            if (code === "0x") {
+              console.warn(`Contract at address ${token.address} does not exist or is not deployed.`);
+              return 0; // Skip this token
+            }
+
+            const balance = await contract.balanceOf(walletAddress);
+            const decimals = await contract.decimals();
+            const adjustedBalance = parseFloat(ethers.utils.formatUnits(balance, decimals));
+
+            // Fetch token price from an API (placeholder)
+            const price = 1; // Replace with actual price fetching logic
+
+            return adjustedBalance * price;
+          } catch (error) {
+            console.error(`Error fetching balance for token ${token.address}:`, error);
+            return 0; // Skip this token
+          }
+        });
+
+        // Wait for all balance promises to resolve
+        const tokenBalances = await Promise.all(balancePromises);
+        const hardcodedBalance = tokenBalances.reduce((sum, value) => sum + value, 0);
+
         setBalance(hardcodedBalance);
         
         if (onRefresh) {

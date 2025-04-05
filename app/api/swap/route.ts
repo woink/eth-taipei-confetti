@@ -207,5 +207,4 @@ export async function POST(
     return NextResponse.json({ error: "Failed to process swap" }, { status: 500 });
   }
 
-  return NextResponse.json({ message: "worked" });
 }
