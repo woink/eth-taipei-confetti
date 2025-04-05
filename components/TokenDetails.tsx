@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { ArrowUpRight, ArrowDownRight, ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { tokens } from '@/data/tokens';
 import { mockTransactions } from '@/data/mockData';
 import { useRouter } from 'next/navigation';

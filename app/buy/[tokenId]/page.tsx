@@ -1,5 +1,5 @@
 import { tokens } from '@/data/tokens';
-import { BuyTokenForm } from './BuyTokenForm';
+import { BuyTokenForm } from '@/components/BuyTokenForm';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
