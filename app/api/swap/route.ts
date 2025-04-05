@@ -93,12 +93,6 @@ const secretsCount = quote.getPreset().secretsCount;
                 )
             );
 
-// console.log("quote", quote);
-
-// TODO, is this supposed to be there?
-// patch quote
-// quote.quoteId = "12345"
-
   try {
   const quoteResponse = await sdk.placeOrder(quote, {
     walletAddress: makerAddress,
@@ -112,14 +106,17 @@ const secretsCount = quote.getPreset().secretsCount;
 
     let returnLoop = false;
 
-    const intervalId = setInterval(async () => {
+
+      
+      while(true){
         console.log(`Polling for fills until order status is set to "executed"...`);
 
         try {
         const order = await sdk.getOrderStatus(orderHash)
                 if (order.status === 'executed') {
                     console.log(`Order is complete. Exiting.`);
-                    clearInterval(intervalId);
+                    // clearInterval(intervalId);
+                    return NextResponse.json({ message: "worked" });
                 }
 
               } catch (error) {
@@ -159,7 +156,7 @@ const secretsCount = quote.getPreset().secretsCount;
         }
         }
 
-    }, 5000);
+    }
 
   } catch (error) {
     console.dir(error, { depth: null });
