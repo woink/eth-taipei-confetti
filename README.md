@@ -3,7 +3,7 @@
 Confeti enables simple & seamless crypto trades for all. Built for tomorrow’s digital economy.
 
 > [!IMPORTANT]  
-> This repository contains some big commits, becauseAI tools were used to generate UI components.
+> This repository contains some big commits, AI tools were used to generate UI components and the basic skeleton of the project.
 
 ## How it works
 
