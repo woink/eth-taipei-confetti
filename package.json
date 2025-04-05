@@ -13,6 +13,7 @@
     "coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "@1inch/cross-chain-sdk": "^0.1.13",
     "@hookform/resolvers": "^3.10.0",
     "@next/swc-wasm-nodejs": "^13.5.1",
     "@radix-ui/react-accordion": "^1.2.3",
@@ -51,6 +52,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "date-fns": "^3.6.0",
+    "dotenv": "^16.4.7",
     "embla-carousel-react": "^8.5.2",
     "eslint": "^8.49.0",
     "eslint-config-next": "^13.5.1",
@@ -71,6 +73,7 @@
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.2.2",
     "vaul": "^0.9.9",
+    "web3": "^4.16.0",
     "zod": "^3.24.2"
   },
   "devDependencies": {
