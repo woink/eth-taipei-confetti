@@ -28,7 +28,6 @@ Trades are performed using 1inch Fusion+. Fusion+ executes a cross-chain [dutch 
 ### Pre-loaded account details details:
 - Arbitrum: [0xdd640cFF4733C51eBc77E174259e4FFa18b4729C](https://arbiscan.io/address/0xdd640cFF4733C51eBc77E174259e4FFa18b4729C)
 - Optimism: [0xdd640cFF4733C51eBc77E174259e4FFa18b4729C](https://optimistic.etherscan.io/address/0xdd640cFF4733C51eBc77E174259e4FFa18b4729C)
-- Flow: 
 
 ## Team
 
