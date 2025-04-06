@@ -7,7 +7,7 @@ Confeti enables simple & seamless crypto trades for all. Built for tomorrow’s 
 
 ## How it works
 
-Confeti is powered by 1inch, Cruvegrid and Flow. 1inch Fusion+ handles cross-chain swaps, abstracting the complexity away from the user. It’s also used to index the supported tokens.
+Confeti is powered by 1inch, Cruvegrid. 1inch Fusion+ handles cross-chain swaps, abstracting the complexity away from the user. It’s also used to index the supported tokens.
 
 Cruvegrid BaaS indexes the user's cross-chain swap history without requiring custom code in our backend.
 
